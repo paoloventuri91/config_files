@@ -1,0 +1,122 @@
+[user]
+	name = Paolo Venturi
+	email = paolo.venturi@cgm.com
+[core]
+	autocrlf = true
+	excludesfile = C:\\Users\\paolo.venturi\\Documents\\gitignore_global.txt
+	longpaths = true
+	editor = "'C:/Program Files (x86)/Notepad++/notepad++.exe' -multiInst -nosession"
+[merge]
+	tool = vsdiffmerge
+[mergetool "vscode"]
+     cmd = code --wait $MERGED 
+[diff]
+	tool = vsdiffmerge
+[difftool]
+	prompt = true
+[difftool "vscode"]
+     cmd = code \"$LOCAL\" \"$REMOTE\" --diff --wait
+     trustExitCode = false
+[alias]
+	amend = commit --amend
+	fixup = commit --amend --no-edit
+	st = status -sb
+	co = checkout
+	cob = checkout -b
+	cp = cherry-pick
+	fc = fetch origin --prune --tags
+	pt = !git tag -l | xargs git tag -d && git fetch -t
+
+	# show last commit
+	last = log -1 HEAD
+
+	# unstage staged files (or pass a filename)
+	unstage = reset HEAD --
+
+	# undo last commit(s) and keep changes, with files unstaged
+	r1 = reset HEAD^
+	r2 = reset HEAD^^
+
+    # discard all changes since last commit (use with caution)
+    rh = reset HEAD --hard
+
+	# undo last commit(s) and discard changes (use with caution)
+	rh1 = reset HEAD^ --hard
+	rh2 = reset HEAD^^ --hard
+
+	# fast grep on current folder and subfolders
+	g = grep --break --heading --line-number
+
+    # edit global git config
+	ec = config --global -e
+
+    # add all changes including untracked files and then create a commit
+    # with message...
+    cm = !git add -A && git commit -m
+
+    # add all changes including untracked files and then commit with
+    # 'SAVEPOINT' message.
+    save = !git add -A && git commit -m 'SAVEPOINT'
+
+    # this is functionally identical to 'r1' but it makes more sense
+    # semantically, as it is going to be used after a 'save' or 'wip'
+    undo = reset HEAD^ --mixed
+
+    # add all tracked changes (do not untracked files) and then commit with
+    # 'WIP' message.
+    wip = !git add -u && git commit -m 'WIP'
+
+    # add changes in working dir to a WIPE SAVEPOINT commit, then wipe that
+    # commit so: A) working dir is clean and B) I can still go back to
+    # that work I wiped if needs arises (via reflog).
+    wipe = !git add -A && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard
+
+    # show a tree with all branches
+    tree = log --graph --all --pretty=format:'%C(bold yellow)%h%Creset %C(bold cyan)%aN%Creset %C(bold green)%ar%Creset %s %C(auto)%d'
+
+	# show a tree with specified branch
+    lg = log --graph --pretty=format:'%C(bold yellow)%h%Creset %C(bold cyan)%aN%Creset %C(bold green)%ar%Creset %s %C(auto)%d'
+	
+	# show the status (ahead/behind) for every local branch
+	bs = "!git fetch -p -t && printf %'s\n' && git for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads"
+	
+	parents = "!f(){ \
+        branch=$(git rev-parse --abbrev-ref HEAD) && git fetch -q && git branch -r\
+        | grep -v "\\*" \
+        | grep -E ".*sup_\\|[Ww]ingesfar" \
+        | while read name; \
+            do git merge-base $name $branch \
+            | xargs git rev-list \
+            | wc -l | xargs echo -n && echo \"\" $name \
+            ;\
+        done \
+        | sort -n \
+        | tail -n3 \
+        ;}; f"
+		
+[color]
+	ui = true
+[grep]
+	lineNumber = true
+[winUpdater]
+	recentlySeenVersion = 2.18.0.windows.1
+[gui]
+	recentrepo = D:/workspace_git/CentraleWgRadar
+[fetch]
+    prune = true
+[difftool "vsdiffmerge"]
+	cmd = \"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Professional\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer\\vsdiffmerge.exe\" \"$LOCAL\" \"$REMOTE\" //t
+	keepBackup = false
+[mergetool]
+	prompt = true
+[mergetool "vsdiffmerge"]
+	cmd = \"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Professional\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer\\vsdiffmerge.exe\" \"$REMOTE\" \"$LOCAL\" \"$BASE\" \"$MERGED\" //m
+	keepBackup = false
+	trustExitCode = true
+[difftool "sourcetree"]
+	cmd = 'C:/Program Files (x86)/Beyond Compare 3/BComp.exe' \"$LOCAL\" \"$REMOTE\"
+[mergetool "sourcetree"]
+	cmd = 'C:/Program Files (x86)/Beyond Compare 3/BComp.exe' \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"
+	trustExitCode = true
+[credential]
+	helper = manager

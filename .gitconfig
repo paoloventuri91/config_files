@@ -1,22 +1,11 @@
 [user]
 	name = Paolo Venturi
-	email = paolo.venturi@cgm.com
+	email = paolo.venturi.91@gmail.com
 [core]
 	autocrlf = true
 	excludesfile = C:\\Users\\paolo.venturi\\Documents\\gitignore_global.txt
 	longpaths = true
 	editor = "'C:/Program Files (x86)/Notepad++/notepad++.exe' -multiInst -nosession"
-[merge]
-	tool = vsdiffmerge
-[mergetool "vscode"]
-     cmd = code --wait $MERGED 
-[diff]
-	tool = vsdiffmerge
-[difftool]
-	prompt = true
-[difftool "vscode"]
-     cmd = code \"$LOCAL\" \"$REMOTE\" --diff --wait
-     trustExitCode = false
 [alias]
 	amend = commit --amend
 	fixup = commit --amend --no-edit
@@ -93,30 +82,43 @@
         | sort -n \
         | tail -n3 \
         ;}; f"
-		
+	
+	# show the status (ahead/behind) for every local branch
+	bs = "!git fetch -p -t && printf %'s\n' && git for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads"
+
+	# show unmerged branches
+	nm = branch -r --no-merged
+
+	# show merged branches
+	bm = branch -r --merged
+
+	# rebase interattivo degli ultimi N commit (N specificato)
+	ri = "!sh -c \"git rebase -i HEAD~$1\" -"
+
+	# show --name-only
+	sn = show --name-only
+
+	parents = "!f(){ \
+		branch=$(git rev-parse --abbrev-ref HEAD) && git fetch -q && git branch -r\
+		| grep -v "\\*" \
+		| grep -E ".*sup_\\|[Ww]ingesfar" \
+		| while read name; \
+			do git merge-base $name $branch \
+			| xargs git rev-list \
+			| wc -l | xargs echo -n && echo \"\" $name \
+			;\
+		done \
+		| sort -n \
+		| tail -n3 \
+		;}; f"
+
+	# show last tag name on branch
+	last-tag = describe --tags --abbrev=0	
+	
 [color]
 	ui = true
 [grep]
 	lineNumber = true
-[winUpdater]
-	recentlySeenVersion = 2.18.0.windows.1
-[gui]
-	recentrepo = D:/workspace_git/CentraleWgRadar
 [fetch]
     prune = true
-[difftool "vsdiffmerge"]
-	cmd = \"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Professional\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer\\vsdiffmerge.exe\" \"$LOCAL\" \"$REMOTE\" //t
-	keepBackup = false
-[mergetool]
-	prompt = true
-[mergetool "vsdiffmerge"]
-	cmd = \"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Professional\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer\\vsdiffmerge.exe\" \"$REMOTE\" \"$LOCAL\" \"$BASE\" \"$MERGED\" //m
-	keepBackup = false
-	trustExitCode = true
-[difftool "sourcetree"]
-	cmd = 'C:/Program Files (x86)/Beyond Compare 3/BComp.exe' \"$LOCAL\" \"$REMOTE\"
-[mergetool "sourcetree"]
-	cmd = 'C:/Program Files (x86)/Beyond Compare 3/BComp.exe' \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"
-	trustExitCode = true
-[credential]
-	helper = manager
+
